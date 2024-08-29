@@ -1,0 +1,36 @@
+﻿@model Store.ViewModels.RegisterViewModel
+
+<form asp-action="Register" method="post" class="form-container">
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        <label asp-for="FirstName">Имя</label>
+        <input asp-for="FirstName" class="form-custom form-control rounded-pill @(ViewData.ModelState["FirstName"]?.Errors.Count > 0 ? "is-invalid" : "")" placeholder="Введите ваше имя" />
+        <span asp-validation-for="FirstName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="LastName">Фамилия</label>
+        <input asp-for="LastName" class="form-custom form-control rounded-pill @(ViewData.ModelState["LastName"]?.Errors.Count > 0 ? "is-invalid" : "")" placeholder="Введите вашу фамилию" />
+        <span asp-validation-for="LastName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Email">Электронная почта</label>
+        <input asp-for="Email" class="form-custom form-control rounded-pill @(ViewData.ModelState["Email"]?.Errors.Count > 0 ? "is-invalid" : "")" placeholder="Введите вашу почту" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Password">Пароль</label>
+        <input asp-for="Password" class="form-custom form-control rounded-pill @(ViewData.ModelState["Password"]?.Errors.Count > 0 ? "is-invalid" : "")" placeholder="Введите ваш пароль" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ConfirmPassword">Подтверждение пароля</label>
+        <input asp-for="ConfirmPassword" class="form-custom form-control rounded-pill @(ViewData.ModelState["ConfirmPassword"]?.Errors.Count > 0 ? "is-invalid" : "")" placeholder="Подтвердите ваш пароль" />
+        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-custom btn-block">Зарегистрироваться</button>
+
+    <p class="text-center">
+        Уже есть учетная запись? <a class="accaunt p-2" href="/Account/Login">Войдите здесь</a>
+    </p>
+</form>

@@ -1,0 +1,92 @@
+﻿/* dropdowns.css */
+
+/* Основные стили для выпадающего меню */
+.dropdown-menu {
+    background-color: var(--dropdown-menu-color) !important; /* Цвет фона для выпадающего меню */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important; /* Легкая тень для отделения от фона */
+    border-radius: 0.4rem !important; /* Закругленные углы */
+    border: var(--dropdown-border) !important; /* Граница меню */
+    padding: 10px !important; /* Внутренние отступы для всего меню */
+    min-width: 150px !important; /* Минимальная ширина */
+    width: var(--cz-dropdown-min-width) !important; /* Ширина меню */
+    position: absolute !important;
+    color: var(--text-color) !important; /* Цвет текста */
+    margin-top: 25px !important; /* Отступ сверху */
+    z-index: 1000 !important; /* Убедитесь, что меню поверх других элементов */
+}
+
+    /* Анимация при открытии меню */
+    .dropdown-menu.show {
+        animation: fadeIn 0.1s ease-in-out !important;
+    }
+
+/* Основные стили для элементов меню */
+.dropdown-item {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important; /* Выравнивает элементы по левому краю */
+    cursor: pointer !important;
+    padding: 10px 16px !important; /* Внутренние отступы для элементов */
+    margin: 5px 0 !important; /* Отступы между элементами */
+    border-radius: 0.4rem !important; /* Закругленные углы для элементов */
+    transition: background-color 0.3s ease, color 0.3s ease !important;
+    color: var(--dropdown-item-text-color, var(--text-color)) !important; /* Цвет текста элементов */
+}
+
+/* Стили для иконок */
+.theme-icon {
+    display: flex !important;
+    align-items: center !important;
+    margin-right: 10px !important; /* Отступ между иконкой и текстом */
+}
+
+/* Стили для текста */
+.theme-label {
+    flex-grow: 1 !important; /* Текст заполняет оставшееся пространство */
+}
+
+/* Стили для индикатора (галочка) */
+.item-active-indicator {
+    display: none !important; /* Скрываем индикатор активности по умолчанию */
+    align-items: center !important;
+    margin-left: auto !important; /* Перемещаем индикатор к правому краю */
+}
+
+/* Убедитесь, что индикатор активности отображается только на активном элементе */
+.dropdown-item.active .item-active-indicator {
+    display: inline-block !important; /* Показываем индикатор только для активного элемента */
+}
+
+/* Активный элемент меню */
+.dropdown-item.active {
+    background-color: var(--dropdown-item-active-color) !important; /* Цвет фона активного элемента */
+    color: var(--text-color) !important; /* Цвет текста активного элемента */
+    font-weight: 300 !important;
+    border-radius: 0.5rem !important; /* Закругленные углы для активного элемента */
+}
+
+/* Элемент при наведении */
+.dropdown-item:not(.active):hover,
+.dropdown-item:not(.active):focus,
+.dropdown-item:not(.active):active {
+    background-color: var(--dropdown-item-hover-color) !important; /* Цвет фона при наведении */
+    color: var(--text-color) !important; /* Цвет текста при наведении */
+    border-radius: 0.5rem !important;
+}
+
+    /* Цвет иконок при наведении */
+    .dropdown-item:not(.active):hover .theme-icon i {
+        color: var(--primary-color) !important; /* Цвет иконок при наведении */
+    }
+
+/* Выравнивание и отступы для переключателя темы */
+.theme-switcher {
+    padding: 2px 2px;
+    margin-right: 1px;
+}
+
+.switcher {
+    margin-right: 5px;
+}
+
+

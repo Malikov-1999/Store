@@ -1,0 +1,48 @@
+﻿/* Общие стили для кнопок */
+
+.btn-icon {
+    background-color: transparent !important; /* Убираем фон */
+    border: none !important; /* Убираем границу */
+    box-shadow: none !important; /* Убираем тень */
+    outline: none !important; /* Убираем обводку */
+    padding: 0; /* Убираем отступы */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px; /* Фиксированный размер кнопки */
+    height: 40px;
+    border-radius: 50%; /* Круглая форма */
+    overflow: hidden; /* Скрываем выход за границы кнопки */
+    transition: none !important; /* Отключаем переходы */
+    color: var(--text-color) !important;
+}
+
+    /* Эффект увеличения иконки при наведении */
+    .btn-icon .animate-target {
+        transition: transform 0.3s ease; /* Плавный переход для увеличения */
+    }
+
+    .btn-icon:hover .animate-target,
+    .btn-icon:focus .animate-target,
+    .btn-icon:active .animate-target {
+        transform: scale(1.2); /* Увеличение иконки при наведении */
+        color: inherit !important; /* Сохраняем текущий цвет иконки */
+    }
+
+.btn-custom {
+    border: 1px solid var(--primary-color) !important;
+    border-radius: 20px !important;
+    margin: 2px !important;
+    font-size: 13px !important;
+    white-space: nowrap !important;
+}
+
+    .btn-custom:hover {
+        background-color: var(--dropdown-item-active-color) !important; /* Цвет при наведении */
+    }
+
+.size-and-button-container {
+    display: flex;
+    align-items: center; /* Выровнять элементы по вертикали */
+    gap: 3px; /* Пробел между выпадающим списком и кнопкой */
+}

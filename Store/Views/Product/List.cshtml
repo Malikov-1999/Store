@@ -1,0 +1,223 @@
+﻿@using Store.Data.Models
+@model Store.ViewModels.ProductListViewModel
+
+<nav class="pt-3 my-3 my-md-4" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="@Url.Action("Index", "Home")" class="text-color">Главная</a>
+        </li>
+        <li class="breadcrumb-item active text-color" aria-current="page">
+            Каталог товаров
+        </li>
+    </ol>
+</nav>
+
+<!-- Container for title and search -->
+<div class="d-flex justify-content-between align-items-center">
+
+
+    <!-- Форма фильтрации -->
+    <form asp-action="List" method="get" class="" id="filterForm">
+        <div class="row">
+            <!-- Цена от и до -->
+            <div class="col-md-6">
+                <div class="row mt-1">
+                    <div class="col-md-12">
+                        <label for="minPrice">Цена от</label>
+                        <input type="number" id="minPrice" name="MinPrice" class="form-control rounded-pill mb-2" placeholder="от" step="0" value="@Model.MinPrice" min="0" />
+                    </div>
+                    <div class="col-md-12">
+                        <label for="maxPrice">Цена до</label>
+                        <input type="number" id="maxPrice" name="MaxPrice" class="form-control rounded-pill" placeholder="до" step="0" value="@Model.MaxPrice" min="0" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Категория и Тип продукта -->
+            <div class="col-md-6">
+                <div class="row mt-1">
+                    <div class="col-md-6">
+                        <label for="categoryId">Категория</label>
+                        <select id="categoryId" name="CategoryId" class="form-select">
+                            <option value="">Все</option>
+                            @foreach (var category in Model.Categories)
+                            {
+                                <option value="@category.Id" @(category.Id == Model.SelectedCategoryId ? "selected" : "")>@category.Name</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="productType">Тип продукта</label>
+                        <select id="productType" name="ProductType" class="form-select">
+                            <option value="">Все</option>
+                            @foreach (var type in Model.ProductTypes)
+                            {
+                                <option value="@type" @(type == Model.ProductType ? "selected" : "")>@type</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Поверхность и Страна -->
+            <div class="col-md-6">
+                <div class="row mt-1">
+                    <div class="col-md-6">
+                        <label for="surface">Поверхность</label>
+                        <select id="surface" name="Surface" class="form-select">
+                            <option value="">Все</option>
+                            @foreach (var surface in Model.Surfaces)
+                            {
+                                <option value="@surface" @(surface == Model.Surface ? "selected" : "")>@surface</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="countryOfOrigin">Страна</label>
+                        <select id="countryOfOrigin" name="CountryOfOrigin" class="form-select">
+                            <option value="">Все</option>
+                            @foreach (var country in Model.Countries)
+                            {
+                                <option value="@country" @(country == Model.CountryOfOrigin ? "selected" : "")>@country</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Материал -->
+            <div class="col-md-6">
+                <div class="row mt-1">
+                    <div class="col-md-12">
+                        <label for="material">Материал</label>
+                        <select id="material" name="Material" class="form-select">
+                            <option value="">Все</option>
+                            @foreach (var material in Model.Materials)
+                            {
+                                <option value="@material" @(material == Model.Material ? "selected" : "")>@material</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Кнопки -->
+            <div class="col-md-12 mt-3">
+                <div class="row">
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-custom w-100">Применить фильтры</button>
+                    </div>
+                    <div class="col-md-6">
+                        <button type="reset" class="btn btn-custom w-100">Очистить все</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Модальное окно для спиннера -->
+        <div class="modal fade" id="loadingModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content bg-transparent border-0">
+                    <div class="modal-body text-center">
+                        <!-- SOLAR SYSTEM -->
+                        <div class="spinner-box">
+                            <div class="solar-system">
+                                <div class="earth-orbit orbit">
+                                    <div class="planet earth"></div>
+                                    <div class="venus-orbit orbit">
+                                        <div class="planet venus"></div>
+                                        <div class="mercury-orbit orbit">
+                                            <div class="planet mercury"></div>
+                                            <div class="sun"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+
+    <!-- Search form -->
+    <form class="position-relative" style="width: 400px; margin-bottom: 20px;">
+        <input type="search" class="rounded-pill form-control bg-custom text-custom" placeholder="Поиск..." style="padding-right: 40px; height: calc(1.5em + 1rem + 2px);">
+        <button type="submit" class="btn btn-icon btn-sm fs-lg rounded-circle position-absolute top-0 end-0 mt-1 me-1 bg-custom text-custom" aria-label="Поиск">
+            <i class="ci-arrow-right text-custom"></i>
+        </button>
+    </form>
+</div>
+
+
+
+
+<!-- Product list -->
+<div class="row mt-4">
+    @if (Model.AllProducts != null && Model.AllProducts.Any())
+    {
+        foreach (var product in Model.AllProducts)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 productCard">
+                    <!-- Изображение продукта с ссылкой на страницу деталей -->
+                    <a href="@Url.Action("Details", "Product", new { id = product.Id })">
+                        <img src="@product.ImageUrl" class="card-img-top imgCard" alt="@product.Name">
+                    </a>                    <div class="card-body">
+                        <h5 class="card-title">@product.Name</h5>
+
+                        @if (product.DiscountPrice.HasValue)
+                        {
+                            <p class="card-text">
+                                <h8>Цена:</h8>
+                                <h8 style="text-decoration: line-through;">@product.Price.ToString("C")</h8>
+                                <h8 class="text-success">@product.DiscountPrice.Value.ToString("C")</h8>
+                            </p>
+                        }
+                        else
+                        {
+                            <p class="card-text"><strong>Цена:</strong> @product.Price.ToString("C")</p>
+                        }
+
+                        @if (product.AvailableSizes != null && product.AvailableSizes.Any())
+                        {
+                            <p class="card-text">
+                                <h8>Выберите размер:</h8>
+                                <div class="size-and-button-container">
+                                    <select id="size-selector-@product.Id" class="form-select" onchange="updatePrice(@product.Id)">
+                                        @foreach (var size in product.AvailableSizes)
+                                        {
+                                            <option class="option" value="@size">@size</option>
+                                        }
+                                    </select>
+                                    <a href="#" class="btn btn-custom">В корзину</a>
+                                </div>
+                            </p>
+                        }
+
+                        <a href="#" class="btn btn-custom">Оформить сейчас</a>
+
+                        <a href="@Url.Action("Details", "Product", new { id = product.Id })" class="btn btn-custom">
+                            Подробнее
+                        </a>
+
+
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="container">
+            <p class="text-center">Нет доступных продуктов в этой категории.</p>
+        </div>
+    }
+</div>
+
+
+
+
+

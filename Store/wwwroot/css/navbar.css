@@ -1,0 +1,251 @@
+﻿/* Общие стили */
+.phone, .accaunt, .nav-item {
+    position: relative;
+    display: inline-block;
+    color: var(--text-color) !important;
+    text-decoration: none;
+    padding: 0;
+    white-space: nowrap; /* Запрещает перенос текста */
+}
+
+    /* Стили для подчеркивания */
+    .phone::after, .accaunt::after, .nav-item .nav-link::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 0;
+        height: 1px; /* Толщина подчеркивания */
+        background-color: var(--primary-color); /* Цвет подчеркивания */
+        transition: width 0.5s ease-in-out; /* Плавный переход для подчеркивания */
+    }
+
+    /* Эффект при наведении */
+    .phone:hover::after, .accaunt:hover::after, .nav-item .nav-link:hover::after,
+    .nav-item .nav-link.active::after {
+        width: 100%; /* Подчеркивание растягивается на всю ширину ссылки */
+    }
+
+    /* Стили для навигационного меню */
+    .nav-item .nav-link {
+        position: relative;
+        background-color: transparent !important;
+        text-decoration: none !important;
+        padding: 5px;
+        margin-right: 15px;
+    }
+
+        .nav-item .nav-link:hover,
+        .nav-item .nav-link:focus,
+        .nav-item .nav-link:active {
+            color: var(--primary-color) !important;
+            background-color: transparent !important;
+            text-decoration: none !important;
+        }
+
+        /* Подчеркивание при наведении */
+        .nav-item .nav-link::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 0;
+            height: 1px;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease-in-out;
+        }
+
+        .nav-item .nav-link:hover::after,
+        .nav-item .nav-link.active::after {
+            width: 100%; /* Подчеркивание растягивается на всю ширину ссылки */
+        }
+
+.nav-item {
+    display: inline-block;
+    vertical-align: middle;
+    font-weight: 620;
+}
+
+/* Стили для навигационной панели и заголовка */
+.navbar {
+    background-color: var(--navbar-color) !important;
+    color: var(--text-color) !important;
+    border-radius: 50px;
+   
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    width: 40px;
+    height: 40px;
+    padding-bottom: 5px;
+}
+
+/* Стили для кнопки-меню (бургер) */
+.navbar-toggler {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 25px;
+    height: 25px; /* Высота для трех линий */
+}
+
+.burger-line {
+    width: 25px;
+    height: 2px;
+    background-color: var(--text-color); /* Цвет линий берется из переменной текущей темы */
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+/* Анимация при наведении */
+.navbar-toggler:hover .burger-line:nth-child(1) {
+    transform: translateX(-5px); /* Верхняя линия сдвигается влево */
+}
+
+.navbar-toggler:hover .burger-line:nth-child(3) {
+    transform: translateX(5px); /* Нижняя линия сдвигается вправо */
+}
+
+/* Средняя линия остается на месте */
+.navbar-toggler .burger-line:nth-child(2) {
+    /* Оставляем среднюю линию без изменений */
+}
+
+/* Отключаем фон для offcanvas */
+.offcanvas-backdrop {
+    display: none !important; /* Прячем фон */
+    transition: none !important; /* Убираем анимацию */
+}
+
+.offcanvas.show ~ .offcanvas-backdrop {
+    display: block !important; /* Отображаем фон только когда меню открыто */
+}
+
+/* Стили для углов навигационной панели */
+.rounded-pill {
+    border-radius: 50px;
+}
+
+.rounded-bottom-only {
+    border-radius: 0 0 15px 15px;
+}
+
+/* Стили для placeholder */
+.form-control::placeholder {
+    color: var(--placeholder-color) !important;
+    opacity: 1;
+}
+
+/* Стили для input */
+.form-control {
+    background-color: var(--input-bg-color) !important;
+    color: var(--input-text-color) !important;
+    border: 1px solid var(--primary-color) !important;
+}
+
+/* Стили для кнопки */
+.btn-submit:hover {
+    background-color: var(--btn-hover-color) !important;
+    transform: translateX(5px);
+}
+
+/* Offcanvas styles */
+.offcanvas-custom {
+    width: 500px;
+    background-color: var(--primary-color);
+}
+
+.offcanvas-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--bs-body-color);
+}
+
+/* Centering the content */
+.offcanvas-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: var(--bs-body-color);
+    padding: 1rem !important; /* Добавляем отступы */
+    flex-grow: 1;
+}
+
+    .offcanvas-body svg {
+        width: 60px;
+        height: auto;
+        margin-bottom: 20px;
+        fill: var(--bs-body-color);
+    }
+
+    .offcanvas-body h6 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+    }
+
+    .offcanvas-body p {
+        font-size: 0.875rem;
+        color: var(--bs-body-color);
+        margin-bottom: 30px;
+        max-width: 400px;
+    }
+
+    .offcanvas-body .btn {
+        background-color: #212529; /* Dark background color */
+        color: #fff;
+        padding: 10px 30px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        border-radius: 50px; /* Rounded pill button */
+    }
+
+        .offcanvas-body .btn:hover {
+            background-color: #343a40; /* Slightly lighter on hover */
+        }
+
+    /* Offcanvas меню на мобильных экранах */
+    .offcanvas-body .navbar-nav {
+        width: 100%; /* Устанавливаем ширину 100% для правильного выравнивания */
+    }
+
+    .offcanvas-body .nav-item {
+        width: 100%; /* Устанавливаем ширину 100% для навигационных элементов */
+        margin-bottom: 0.5rem; /* Добавляем отступ снизу между элементами */
+    }
+
+    .offcanvas-body .nav-link {
+        text-align: left; /* Выравнивание текста по левому краю */
+        padding-left: 1rem; /* Добавляем отступ слева */
+        display: block; /* Блоковый элемент для лучшего выравнивания */
+        color: var(--primary-color) !important; /* Цвет текста */
+    }
+
+        .offcanvas-body .nav-link:hover,
+        .offcanvas-body .nav-link.active {
+            background-color: var(--secondary-color-light); /* Цвет фона при наведении */
+            border-radius: 0.25rem; /* Легкое скругление углов */
+        }
+
+
+.custom-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Вертикальное центрирование */
+    align-items: center; /* Горизонтальное центрирование */
+    height: 100%; /* Центрирование на всю высоту */
+    text-align: center;
+    padding: 20px; /* Отступы для эстетики */
+}
+

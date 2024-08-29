@@ -1,0 +1,568 @@
+﻿
+@font-face {
+    font-family: 'Hind';
+    src: url('/fonts/Hind-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Hind';
+    src: url('/fonts/Hind-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Hind';
+    src: url('/fonts/Hind-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Hind';
+    src: url('/fonts/Hind-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Hind';
+    src: url('/fonts/Hind-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+
+
+
+/* Переменные для светлой и темной темы */
+:root {
+    --background-light: #F5F7FA;
+    --background-dark: #222934;
+    --text-light: #000000;
+    --text-dark: #ffffff;
+    --primary-color-light: #333D4C;
+    --primary-color-dark: #ffffff; 
+    --secondary-color-light: #F5F7FA;
+    --secondary-color-dark: #333D4C;
+    --navbar-light: #FFFFFF;
+    --navbar-dark: #222934;
+    --dropdown-menu-light: #FFFFFF;
+    --dropdown-menu-dark: #181D25;
+    --dropdown-item-active-light: #EEF1F6;
+    --dropdown-item-active-dark: #333D4C;
+    --dropdown-item-hover-light: #F5F7FA;
+    --dropdown-item-hover-dark: #222934;
+    --dropdown-border-light: none;
+    --dropdown-border-dark: 1px solid #333D4C;
+}
+
+    /* Настройки темы */
+    :root[data-bs-theme='light'] {
+        --background-color: var(--background-light);
+        --text-color: var(--text-light);
+        --primary-color: var(--primary-color-light);
+        --secondary-color: var(--secondary-color-light);
+        --navbar-color: var(--navbar-light);
+        --dropdown-menu-color: var(--dropdown-menu-light);
+        --dropdown-item-active-color: var(--dropdown-item-active-light);
+        --dropdown-item-hover-color: var(--dropdown-item-hover-light);
+        --dropdown-border: var(--dropdown-border-light);
+    }
+
+    :root[data-bs-theme='dark'] {
+        --background-color: var(--background-dark);
+        --text-color: var(--text-dark);
+        --primary-color: var(--primary-color-dark);
+        --secondary-color: var(--secondary-color-dark);
+        --navbar-color: var(--navbar-dark);
+        --dropdown-menu-color: var(--dropdown-menu-dark);
+        --dropdown-item-active-color: var(--dropdown-item-active-dark);
+        --dropdown-item-hover-color: var(--dropdown-item-hover-dark);
+        --dropdown-border: var(--dropdown-border-dark);
+    }
+
+/* Применение базовых стилей к элементам */
+body {
+    background: var(--background-color) !important;
+    color: var(--text-color) !important;
+    font-family: 'Hind', sans-serif;
+}
+
+a {
+    color: var(--primery-color);
+    font-family: 'Hind', sans-serif;
+    font-weight: 400; /* Использует Regular */
+}
+
+h1, h2, h3, h4, h5, h6, h8 p, span, div, li {
+    color: var(--text-color) !important;
+    font-family: 'Hind', sans-serif;
+    font-weight: 400; /* Использует Bold */
+}
+
+
+
+
+.breadcrumb-item a {
+    color: var(--primary-color) !important;
+    text-decoration: none;
+}
+
+.breadcrumb-item.active {
+    color: var(--text-color) !important;
+}
+
+
+/* Стили для применения темы */
+.bg-custom {
+    background-color: var(--primary-color) !important;
+}
+
+.text-custom {
+    color: var(--text-color) !important;
+}
+
+/* Дополнительные стили для кнопки */
+.btn-icon i {
+    color: var(--text-color) !important;
+}
+
+
+.card-body {
+    padding-left: 0 !important;
+}
+
+.productCard {
+    background-color: var(--background-color) !important;
+    border: none !important;
+}
+
+.imgCard, .img-fluid {
+    border-radius: 15px !important;
+}
+/* Стили для контейнера формы */
+.card-text {
+    flex-direction: column;
+    margin: 5px;
+}
+
+.form-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 50% !important; /* Ширина селекта равна ширине родителя */
+    padding: 5px !important; /* Внутренние отступы для лучшего внешнего вида */
+    border: 1px solid var(--primary-color) !important; /* Граница */
+    border-radius: 20px !important; /* Скругленные углы */
+    background-color: var(--background-color) !important; /* Цвет фона */
+    font-size: 14px !important; /* Размер шрифта */
+    appearance: none; /* Убирает стандартный вид браузера */
+    margin-right: 5px !important;
+}
+
+    /* Стиль для селекта при фокусе */
+    .form-select:focus {
+        outline: none;
+        border-color: #222934; /* Цвет границы при фокусе */
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Тень при фокусе */
+        border-radius: 20px !important;
+    }
+
+    /* Стиль для стрелки селекта */
+    .form-select::after {
+        content: '▼' !important; /* Стрелка вниз */
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none; /* Убираем возможность взаимодействия с псевдоэлементом */
+        font-size: 12px;
+        color: #333;
+        border-radius: 50px !important;
+    }
+
+
+   .form-select option {
+    background-color: var(--background-color) !important;
+    color: var(--text-color) !important;
+}
+
+    .form-select option:checked {
+        background-color: var(--dropdown-item-active-color) !important;
+        color: var(--text-color) !important;
+    }
+
+.form-select:hover {
+    background-color: var(--dropdown-item-active-color) !important;
+}
+
+    .form-select option:hover {
+        background: var(--primary-color-hover) !important;
+        color: var(--secondary-color-hover) !important;
+    }
+
+
+
+.form-container {
+    max-width: 400px;
+    margin: 50px auto 200px;
+    padding: 20px;
+    background-color: var(--background-color);
+    border-radius: 15px;
+    box-shadow: 0px 0px 10px 0px #000;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-control {
+    padding: 10px;
+    font-size: 12px;
+}
+
+
+.btn-block {
+    width: 100%;
+    padding: 10px;
+    font-size: 20px;
+}
+
+.form-custom {
+  font-size: 13px !important;
+}
+
+
+/* Стили для анимации спиннера */
+/* KEYFRAMES */
+
+@keyframes spin {
+    from {
+        transform: rotate(0);
+    }
+
+    to {
+        transform: rotate(359deg);
+    }
+}
+
+@keyframes spin3D {
+    from {
+        transform: rotate3d(0.5, 0.5, 0.5, 360deg);
+    }
+
+    to {
+        transform: rotate3d(0deg);
+    }
+}
+
+@keyframes configure-clockwise {
+    0% {
+        transform: rotate(0);
+    }
+
+    25% {
+        transform: rotate(90deg);
+    }
+
+    50% {
+        transform: rotate(180deg);
+    }
+
+    75% {
+        transform: rotate(270deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes configure-xclockwise {
+    0% {
+        transform: rotate(45deg);
+    }
+
+    25% {
+        transform: rotate(-45deg);
+    }
+
+    50% {
+        transform: rotate(-135deg);
+    }
+
+    75% {
+        transform: rotate(-225deg);
+    }
+
+    100% {
+        transform: rotate(-315deg);
+    }
+}
+
+@keyframes pulse {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    to {
+        opacity: 0.25;
+        transform: scale(0.75);
+    }
+}
+
+/* GRID STYLING */
+
+
+
+
+
+.spinner-box {
+    width: 300px;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+}
+
+/* SPINNING CIRCLE */
+
+.leo-border-1 {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    padding: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background: rgb(63, 249, 220);
+    background: linear-gradient( 0deg, rgba(63, 249, 220, 0.1) 33%, rgba(63, 249, 220, 1) 100% );
+    animation: spin3D 1.8s linear 0s infinite;
+}
+
+.leo-core-1 {
+    width: 100%;
+    height: 100%;
+    background-color: #37474faa;
+    border-radius: 50%;
+}
+
+.leo-border-2 {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    padding: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background: rgb(251, 91, 83);
+    background: linear-gradient( 0deg, rgba(251, 91, 83, 0.1) 33%, rgba(251, 91, 83, 1) 100% );
+    animation: spin3D 2.2s linear 0s infinite;
+}
+
+.leo-core-2 {
+    width: 100%;
+    height: 100%;
+    background-color: #1d2630aa;
+    border-radius: 50%;
+}
+
+/* ALTERNATING ORBITS */
+
+.circle-border {
+    width: 150px;
+    height: 150px;
+    padding: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background: rgb(63, 249, 220);
+    background: linear-gradient( 0deg, rgba(63, 249, 220, 0.1) 33%, rgba(63, 249, 220, 1) 100% );
+    animation: spin 0.8s linear 0s infinite;
+}
+
+.circle-core {
+    width: 100%;
+    height: 100%;
+    background-color: #1d2630;
+    border-radius: 50%;
+}
+
+/* X-ROTATING BOXES */
+
+.configure-border-1 {
+    width: 115px;
+    height: 115px;
+    padding: 3px;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #fb5b53;
+    animation: configure-clockwise 3s ease-in-out 0s infinite alternate;
+}
+
+.configure-border-2 {
+    width: 115px;
+    height: 115px;
+    padding: 3px;
+    left: -115px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgb(63, 249, 220);
+    transform: rotate(45deg);
+    animation: configure-xclockwise 3s ease-in-out 0s infinite alternate;
+}
+
+.configure-core {
+    width: 100%;
+    height: 100%;
+    background-color: #1d2630;
+}
+
+/* PULSE BUBBLES */
+
+.pulse-container {
+    width: 120px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pulse-bubble {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #3ff9dc;
+}
+
+.pulse-bubble-1 {
+    animation: pulse 0.4s ease 0s infinite alternate;
+}
+
+.pulse-bubble-2 {
+    animation: pulse 0.4s ease 0.2s infinite alternate;
+}
+
+.pulse-bubble-3 {
+    animation: pulse 0.4s ease 0.4s infinite alternate;
+}
+
+/* SOLAR SYSTEM */
+
+.solar-system {
+    width: 250px;
+    height: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.orbit {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #fafbfc;
+    border-radius: 50%;
+}
+
+.earth-orbit {
+    width: 165px;
+    height: 165px;
+    -webkit-animation: spin 12s linear 0s infinite;
+}
+
+.venus-orbit {
+    width: 120px;
+    height: 120px;
+    -webkit-animation: spin 7.4s linear 0s infinite;
+}
+
+.mercury-orbit {
+    width: 90px;
+    height: 90px;
+    -webkit-animation: spin 3s linear 0s infinite;
+}
+
+.planet {
+    position: absolute;
+    top: -5px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #3ff9dc;
+}
+
+.sun {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background-color: #ffab91;
+}
+
+.leo {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+}
+
+.blue-orbit {
+    width: 165px;
+    height: 165px;
+    border: 1px solid #91daffa5;
+    -webkit-animation: spin3D 3s linear 0.2s infinite;
+}
+
+.green-orbit {
+    width: 120px;
+    height: 120px;
+    border: 1px solid #91ffbfa5;
+    -webkit-animation: spin3D 2s linear 0s infinite;
+}
+
+.red-orbit {
+    width: 90px;
+    height: 90px;
+    border: 1px solid #ffca91a5;
+    -webkit-animation: spin3D 1s linear 0s infinite;
+}
+
+.white-orbit {
+    width: 60px;
+    height: 60px;
+    border: 2px solid #ffffff;
+    -webkit-animation: spin3D 10s linear 0s infinite;
+}
+
+.w1 {
+    transform: rotate3D(1, 1, 1, 90deg);
+}
+
+.w2 {
+    transform: rotate3D(1, 2, 0.5, 90deg);
+}
+
+.w3 {
+    transform: rotate3D(0.5, 1, 2, 90deg);
+}
+
+.three-quarter-spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid #fb5b53;
+    border-top: 3px solid transparent;
+    border-radius: 50%;
+    animation: spin 0.5s linear 0s infinite;
+}

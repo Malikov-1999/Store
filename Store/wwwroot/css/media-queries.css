@@ -1,0 +1,100 @@
+﻿/* media-queries.css */
+
+/* Для очень маленьких экранов (мобильные телефоны) */
+@media (max-width: 666px) {
+    body, .dropdown-menu {
+        font-size: 12px !important; /* Уменьшает размер шрифта */
+    }
+}
+
+/* Для небольших экранов (планшеты и небольшие устройства) */
+@media (min-width: 667px) and (max-width: 991px) {
+    body, .dropdown-menu {
+        font-size: 14px !important; /* Немного увеличивает размер шрифта по сравнению с очень маленькими экранами */
+    }
+}
+
+/* Для средних экранов (например, небольшие десктопы и планшеты в ландшафтной ориентации) */
+@media (min-width: 992px) {
+    body, .dropdown-menu {
+        font-size: 16px !important; /* Стандартный размер шрифта для больших экранов */
+    }
+}
+
+
+
+/* Установка ширины для оффканвас-меню на экранах до 667px */
+@media (max-width: 667px) {
+    .offcanvas-custom {
+        width: 60%; /* Открытие на 90% экрана */
+        max-width: 300px; /* Максимальная ширина */
+    }
+}
+
+/* Установка ширины для offcanvas на экранах от 668px до 1024px */
+@media (min-width: 668px) and (max-width: 1024px) {
+    .offcanvas-custom {
+        width: 75%; /* Открытие на 75% экрана */
+        max-width: 400px; /* Максимальная ширина */
+    }
+}
+
+
+
+
+@media (max-width: 992px) {
+    .offcanvas-body {
+        justify-content: flex-start; /* Выравнивание содержимого по началу (слева) */
+        align-items: flex-start; /* Выравнивание элементов по левому краю */
+    }
+
+        .offcanvas-body .nav-link {
+            text-align: left; /* Выравнивание текста по левому краю */
+        }
+}
+
+
+
+@media (max-width: 992px) {
+    .dropdown .nav-link {
+        display: inline-block; /* Устанавливаем ширину по ширине текста */
+        padding: 5px 0px; /* Убираем боковые отступы */
+    }
+
+        .dropdown .nav-link::after {
+            width: 0;
+            height: 1px;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease-in-out;
+        }
+
+        .dropdown .nav-link:hover::after,
+        .dropdown .nav-link.active::after {
+            width: 100%; /* Подчеркивание соответствует ширине текста */
+        }
+}
+
+
+@media (max-width: 992px) {
+    .custom-center {
+        justify-content: center; /* Центрирование по вертикали на маленьких экранах */
+        align-items: center; /* Центрирование по горизонтали */
+        padding: 20px; /* Отступы для мелких экранов */
+    }
+
+        .custom-center h6 {
+            font-size: 1rem; /* Соответствующий размер шрифта для заголовков */
+        }
+
+        .custom-center p {
+            font-size: 0.875rem; /* Уменьшенный размер шрифта для текста */
+        }
+
+        .custom-center .btn {
+            font-size: 0.875rem; /* Размер шрифта кнопки */
+            padding: 10px 20px; /* Уменьшенные отступы кнопки */
+        }
+}
+
+
+

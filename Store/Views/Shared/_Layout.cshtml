@@ -1,0 +1,288 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover">
+
+    <!-- SEO Meta Tags -->
+    <title>@ViewBag.Title</title>
+    <meta name="description" content="Все столешницы – Столешницы для кухни, ванной и рабочего места">
+    <meta name="keywords" content="Столешницы, Столешница, Всестолешницы">
+    <meta name="author" content="VS">
+
+
+    <!-- Webmanifest + Favicon / App icons -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" type="image/png" href="~/img/VS.svg" sizes="32x32">
+    <link rel="apple-touch-icon" href="~/img/VS.svg">
+
+    <!-- Подключение отдельных CSS-файлов -->
+    <link href="~/css/base.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/dropdowns.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/navbar.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/topButton.css" rel="stylesheet" type="text/css" />
+
+    <link rel="manifest" href="/manifest.json">
+
+    <!-- Подключение Bootstrap -->
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- Font icons -->
+    <link rel="preload" href="/fonts/Hind-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+    <link rel="preload" href="/fonts/Hind-Bold.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+    <link rel="preload" href="/fonts/Hind-Light.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+    <link rel="preload" href="/fonts/Hind-Medium.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+    <link rel="preload" href="/fonts/Hind-SemiBold.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="~/icons/cartzilla-icons.min.css" />
+    <link href="~/css/media-queries.css" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+    <!-- Shopping cart offcanvas (Empty state) -->
+    <div class="offcanvas offcanvas-end offcanvas-custom" id="shoppingCart" tabindex="-1" aria-labelledby="shoppingCartLabel">
+        <div class="offcanvas-header py-3 pt-lg-4">
+            <h4 class="offcanvas-title" id="shoppingCartLabel">Корзина покупок</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Закрыть"></button>
+        </div>
+        <div class="offcanvas-body custom-center">
+            <!-- Применяем кастомный класс -->
+            <svg class="d-block mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" width="60" viewBox="0 0 29.5 30">
+                <path class="text-body-tertiary" d="M17.8 4c.4 0 .8-.3.8-.8v-2c0-.4-.3-.8-.8-.8-.4 0-.8.3-.8.8v2c0 .4.3.8.8.8zm3.2.6c.4.2.8 0 1-.4l.4-.9c.2-.4 0-.8-.4-1s-.8 0-1 .4l-.4.9c-.2.4 0 .9.4 1zm-7.5-.4c.2.4.6.6 1 .4s.6-.6.4-1l-.4-.9c-.2-.4-.6-.6-1-.4s-.6.6-.4 1l.4.9z" fill="currentColor"></path>
+                <path class="text-body-emphasis" d="M10.7 24.5c-1.5 0-2.8 1.2-2.8 2.8S9.2 30 10.7 30s2.8-1.2 2.8-2.8-1.2-2.7-2.8-2.7zm0 4c-.7 0-1.2-.6-1.2-1.2s.6-1.2 1.2-1.2 1.2.6 1.2 1.2-.5 1.2-1.2 1.2zm11.1-4c-1.5 0-2.8 1.2-2.8 2.8a2.73 2.73 0 0 0 2.8 2.8 2.73 2.73 0 0 0 2.8-2.8c0-1.6-1.3-2.8-2.8-2.8zm0 4c-.7 0-1.2-.6-1.2-1.2s.6-1.2 1.2-1.2 1.2.6 1.2 1.2-.6 1.2-1.2 1.2zM8.7 18h16c.3 0 .6-.2.7-.5l4-10c.2-.5-.2-1-.7-1H9.3c-.4 0-.8.3-.8.8s.4.7.8.7h18.3l-3.4 8.5H9.3L5.5 1C5.4.7 5.1.5 4.8.5h-4c-.5 0-.8.3-.8.7s.3.8.8.8h3.4l3.7 14.6a3.24 3.24 0 0 0-2.3 3.1C5.5 21.5 7 23 8.7 23h16c.4 0 .8-.3.8-.8s-.3-.8-.8-.8h-16a1.79 1.79 0 0 1-1.8-1.8c0-1 .9-1.6 1.8-1.6z" fill="currentColor"></path>
+            </svg>
+            <h6 class="mb-2">Ваша корзина пуста!</h6>
+            <p class="fs-sm mb-4">Исследуйте наш широкий ассортимент продукции и добавляйте товары в корзину для совершения покупки.</p>
+            <a class="btn rounded-pill @(ViewContext.RouteData.Values["controller"].ToString() == "Product" ? "active" : "")" href="@Url.Action("List", "Product")">Продолжить покупки</a>
+        </div>
+    </div>
+
+    <!-- Topbar -->
+    <div class="container position-relative d-flex justify-content-between z-1 py-3">
+
+        <div class="nav animate-underline">
+            <span class="text-secondary-emphasis fs-xs me-1">Контакты</span>
+            <a class="phone nav-link animate-target fs-xs fw-semibold p-0" href="tel:+74997535737">+7&nbsp;499&nbsp;753&nbsp;57&nbsp;37</a>
+        </div>
+
+        <a class="text-secondary-emphasis fs-xs text-decoration-none d-none d-md-inline" href="#!">🔥 Лучшие предложения по приятным ценам </a>
+        <ul class="nav gap-4">
+            <li class="animate-underline">
+                <a class="accaunt nav-link animate-target fs-xs p-0" href="/Account/Login">Вход</a>
+            </li>
+        </ul>
+
+    </div>
+
+    <!-- Navigation bar (Page header) -->
+    <header class="navbar-sticky sticky-top container z-fixed px-2">
+
+        <div id="navbar" class="navbar navbar-expand-lg flex-nowrap bg-body shadow ps-0 mx-1 p-1">
+
+            <div class="navbar position-absolute top-0 start-0 w-100 h-100 bg-dark rounded-pill z-0 d-none d-block-dark rounded-bottom-only"></div>
+
+            <!-- Custom Mobile offcanvas menu toggler (Hamburger) -->
+            <button type="button" class="navbar-toggler ms-3 custom-burger" data-bs-toggle="offcanvas" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-label="Toggle navigation">
+                <div class="burger-line"></div>
+                <div class="burger-line"></div>
+                <div class="burger-line"></div>
+            </button>
+
+            <!-- Navbar brand (Logo) -->
+            <a class="navbar-brand position-relative z-1 ms-4 ms-sm-5 ms-lg-4 me-2 me-sm-0 me-lg-3 @(ViewContext.RouteData.Values["controller"].ToString() == "Home" ? "active" : "")" href="@Url.Action("Index", "Home")"><img class="logo" src="~/img/VS.svg" alt="logo" /></a>
+
+            <!-- Main navigation that turns into offcanvas on screens < 992px wide (lg breakpoint) -->
+            <nav class="offcanvas offcanvas-start offcanvas-custom" id="navbarNav" tabindex="-1" aria-labelledby="navbarNavLabel">
+                <div class="offcanvas-header py-3">
+                    <h5 class="offcanvas-title" id="navbarNavLabel">Всестолешницы</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+
+                <div class="offcanvas-body pt-3 pb-4 py-lg-0 mx-lg-auto d-flex flex-column align-items-start">
+                    <ul class="navbar-nav position-relative w-100">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link fs-sm @(ViewContext.RouteData.Values["controller"].ToString() == "Home" ? "active" : "")" href="@Url.Action("Index", "Home")">Главная</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link fs-sm @(ViewContext.RouteData.Values["controller"].ToString() == "Product" ? "active" : "")" href="@Url.Action("List", "Product")">Каталог</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link fs-sm @(ViewContext.RouteData.Values["controller"].ToString() == "Services" ? "active" : "")" href="@Url.Action("Index", "Services")">Услуги</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link fs-sm @(ViewContext.RouteData.Values["controller"].ToString() == "Delivery" ? "active" : "")" href="@Url.Action("Index", "Delivery")">Доставка и шоурум</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link fs-sm @(ViewContext.RouteData.Values["controller"].ToString() == "Contact" ? "active" : "")" href="@Url.Action("Index", "Contact")">Контакты</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <div class="d-flex gap-sm-1 position-relative switcher">
+                <!-- Theme switcher (light/dark/auto) -->
+                <div class="dropdown">
+                    <button type="button" class="theme-switcher btn btn-icon btn-outline-secondary fs-lg border-0 rounded-circle animate-scale" data-bs-toggle="dropdown" data-bs-display="dynamic" aria-expanded="false" aria-label="Toggle theme (light)">
+                        <span class="theme-icon-active d-flex animate-target">
+                            <i class="ci-sun"></i>
+                        </span>
+                    </button>
+                    <ul class="dropdown-menu translate-middle-x position-absolute">
+                        <li>
+                            <button type="button" class="dropdown-item" data-bs-theme-value="light" aria-pressed="true">
+                                <span class="theme-icon d-flex fs-base me-2">
+                                    <i class="ci-sun"></i>
+                                </span>
+                                <span class="theme-label">Светлая</span>
+                                <i class="item-active-indicator ci-check ms-auto"></i>
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button" class="dropdown-item" data-bs-theme-value="dark" aria-pressed="false">
+                                <span class="theme-icon d-flex fs-base me-2">
+                                    <i class="ci-moon"></i>
+                                </span>
+                                <span class="theme-label">Тёмная</span>
+                                <i class="item-active-indicator ci-check ms-auto"></i>
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button" class="dropdown-item active" data-bs-theme-value="auto" aria-pressed="false">
+                                <span class="theme-icon d-flex fs-base me-2">
+                                    <i class="ci-auto"></i>
+                                </span>
+                                <span class="theme-label">Системная</span>
+                                <i class="item-active-indicator ci-check ms-auto"></i>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Cart button -->
+                <button type="button" class="btn btn-icon fs-lg btn-outline-secondary border-0 rounded-circle animate-scale me-2" data-bs-toggle="offcanvas" data-bs-target="#shoppingCart" aria-controls="shoppingCart" aria-label="Shopping cart" style="z-index: 1060;">
+                    <span class="theme-icon-active d-flex animate-target">
+                        <i class="ci-shopping-cart animate-target"></i>
+                    </span>
+                </button>
+            </div>
+        </div>
+
+    </header>
+
+    <!-- Main content area -->
+    <div class="container position-relative" id="1">
+        @RenderBody()
+    </div>
+
+    <!-- Page footer -->
+    <footer class="footer bg-dark pb-4 py-lg-2">
+        <div class="container pt-5 pt-lg-4 mt-sm-2 mt-md-3">
+            <div class="row pb-5">
+
+                <!-- Subscription + Social account links -->
+                <div class="col-md col-xl-8 order-md-2">
+                    <div class="text-center px-sm-4 mx-auto" style="max-width: 568px">
+                        <h3 class="pb-1 mb-2 text-white">Оставайтесь с нами на связи</h3>
+                        <p class="fs-sm text-light pb-2 pb-sm-3">Получайте последние обновления о наших продуктах и акциях</p>
+                        <form class="needs-validation position-relative" novalidate="">
+                            <input type="email" class="form-control form-control-lg rounded-pill text-start" placeholder="Ваша почта" aria-label="Your email address" required="">
+                            <div class="invalid-tooltip bg-transparent p-0 text-light">Please enter your email address!</div>
+                            <button type="submit" class="btn btn-icon fs-xl btn-submit rounded-circle position-absolute top-0 end-0 mt-1 me-1" aria-label="Submit your email address">
+                                <span class="theme-icon-active d-flex animate-target">
+                                    <i class="ci-arrow-up-right"></i>
+                                </span>
+                            </button>
+                        </form>
+
+                        <div class="d-flex justify-content-center gap-2 pt-4 pt-md-5 mt-1 mt-md-0">
+                            <a class="btn btn-icon fs-base btn-outline-secondary border-0 text-white" href="#!" aria-label="Follow us on Instagram">
+                                <i class="ci-instagram"></i>
+                            </a>
+                            <a class="btn btn-icon fs-base btn-outline-secondary border-0 text-white" href="#!" aria-label="Follow us on Telegram">
+                                <i class="ci-telegram"></i>
+                            </a>
+                            <a class="btn btn-icon fs-base btn-outline-secondary border-0 text-white" href="#!" aria-label="Follow us on Whatsapp">
+                                <i class="ci-whatsapp"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category links -->
+                <div class="col-md-auto col-xl-2 text-start order-md-1 pt-3 pt-md-0">
+                    <ul class="nav d-inline-flex flex-md-column justify-content-center align-items-start gap-md-1">
+
+                        <li class="nav-item me-lg-n1 me-xl-0">
+                            <a class="nav-link fs-sm text-white @(ViewContext.RouteData.Values["controller"].ToString() == "Home" ? "active" : "")" href="@Url.Action("Index", "Home")">Главная</a>
+                        </li>
+                        <li class="nav-item me-lg-n1 me-xl-0">
+                            <a class="nav-link fs-sm text-white @(ViewContext.RouteData.Values["controller"].ToString() == "Product" ? "active" : "")" href="@Url.Action("List", "Product")">Каталог</a>
+                        </li>
+                        <li class="nav-item me-lg-n2 me-xl-0">
+                            <a class="nav-link fs-sm text-white @(ViewContext.RouteData.Values["controller"].ToString() == "Services" ? "active" : "")" href="@Url.Action("Index", "Services")">Услуги</a>
+                        </li>
+                        <li class="nav-item me-lg-n2 me-xl-0">
+                            <a class="nav-link fs-sm text-white @(ViewContext.RouteData.Values["controller"].ToString() == "Delivery" ? "active" : "")" href="@Url.Action("Index", "Delivery")">Доставка и шоурум</a>
+                        </li>
+                        <li class="nav-item me-lg-n2 me-xl-0">
+                            <a class="nav-link fs-sm text-white @(ViewContext.RouteData.Values["controller"].ToString() == "Contact" ? "active" : "")" href="@Url.Action("Index", "Contact")">Контакты</a>
+                        </li>
+
+                    </ul>
+                </div>
+
+
+                <!-- Customer links -->
+                <div class="col-md-auto col-xl-2 text-center order-md-3 pt-3 pt-md-0">
+                    <ul class="nav flex-column justify-content-start align-items-start gap-2">
+                        <li class="animate-underline my-1 mx-2 m-md-0">
+                            <a class="phone nav-link animate-target fs-xs fw-semibold p-0 text-white" href="tel:+74997535737">+7&nbsp;499&nbsp;753&nbsp;57&nbsp;37</a>
+                        </li>
+                        <li class="my-1 mx-2 m-md-0">
+                            <span class="text-light fw-bold fs-sm">10.00-19.00</span>
+                        </li>
+                        <li class="my-1 mx-2 m-md-0">
+                            <a class="address nav-link animate-target fs-xs p-0 text-light text-nowrap fs-sm fw-bold" href="https://yandex.ru/maps/-/CDsqN2zz" target="_blank">
+                                Калужское ш., 4, стр. 1, Москва
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <!-- Copyright -->
+            <p class="fs-xs text-center text-white pt-lg-1 mt-n2 mt-md-0 mb-3">
+                © Все права защищены. 2024
+            </p>
+        </div>
+    </footer>
+
+    <!-- Back to top button -->
+    <div class="scroll-to-top">
+        <button class="btn-scroll-top">
+            <span class="arrow">↑</span>
+            <svg class="progress-circle" width="60" height="60" viewBox="0 0 60 60">
+                <circle cx="30" cy="30" r="28" stroke-width="4" />
+            </svg>
+        </button>
+    </div>
+
+    <!-- Дополнительные скрипты -->
+
+    <script src="~/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Theme switcher (color modes) -->
+    <script src="~/js/theme-switcher.js"></script>
+
+    <script src="~/js/navbarSticky.js"></script>
+
+</body>
+
+</html>

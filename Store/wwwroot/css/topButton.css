@@ -1,0 +1,54 @@
+﻿.scroll-to-top {
+    position: fixed;
+    top: 87%;
+    right: 7px;
+    transform: translateY(-50%);
+    z-index: 1000;
+}
+
+.btn-scroll-top {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    background-color: var(--background-color); /* Используем цвет фона, соответствующий теме */
+    border-radius: 50%;
+    border: 0px solid var(--primary-color); /* Используем основной цвет для границы */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+    .btn-scroll-top .arrow {
+        font-size: 25px;
+        color: var(--text-color); /* Используем основной цвет текста */
+    }
+
+.progress-circle {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg); /* Поворачиваем круг, чтобы начальная точка была сверху */
+}
+
+    .progress-circle circle {
+        fill: none;
+        stroke: var(--primary-color); /* Используем основной цвет для прогресс-бара */
+        stroke-width: 4;
+        stroke-dasharray: 176; /* Длина окружности (2 * π * r) для r=28 */
+        stroke-dashoffset: 176;
+        transition: stroke-dashoffset 0.3s ease;
+    }
+
+/* Настройка прогресс-бара в зависимости от прокрутки */
+body {
+    --scroll-progress: 0%;
+}
+
+    body.scrolled .progress-circle circle {
+        stroke-dashoffset: calc(176 - (var(--scroll-progress) * 1.76));
+    }
