@@ -12,8 +12,8 @@ using Store.Data;
 namespace Store.Migrations
 {
     [DbContext(typeof(AppDBContent))]
-    [Migration("20240827163704_Add")]
-    partial class Add
+    [Migration("20240924112144_MakeGroupNullable")]
+    partial class MakeGroupNullable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -158,57 +158,6 @@ namespace Store.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Store.Data.Models.Accessory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CountryOfOrigin")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Material")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SKU")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Size")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UnitOfMeasurement")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Volume")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("Weight")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("Accessories");
-                });
-
             modelBuilder.Entity("Store.Data.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -291,16 +240,60 @@ namespace Store.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ParentCategoryId")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ParentCategoryId");
-
                     b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("Store.Data.Models.Detail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Details");
+                });
+
+            modelBuilder.Entity("Store.Data.Models.Image", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("Store.Data.Models.Product", b =>
@@ -311,49 +304,31 @@ namespace Store.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("Available")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("AvailableSizes")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
-                    b.Property<string>("CountryOfOrigin")
+                    b.Property<string>("Country")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("DiscountPrice")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Group")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsFavProduct")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Material")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("ProductType")
+                    b.Property<int>("ProductTypeTypes")
                         .HasColumnType("int");
 
                     b.Property<string>("SKU")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Surface")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -363,7 +338,7 @@ namespace Store.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("Store.Data.Models.ProductSizePrice", b =>
+            modelBuilder.Entity("Store.Data.Models.Variation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -371,7 +346,7 @@ namespace Store.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal?>("DiscountPrice")
+                    b.Property<decimal?>("DiscountedPrice")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Price")
@@ -381,13 +356,14 @@ namespace Store.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Size")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductSizePrices");
+                    b.ToTable("Variations");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -441,10 +417,10 @@ namespace Store.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Store.Data.Models.Accessory", b =>
+            modelBuilder.Entity("Store.Data.Models.Detail", b =>
                 {
                     b.HasOne("Store.Data.Models.Product", "Product")
-                        .WithMany()
+                        .WithMany("Details")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -452,13 +428,15 @@ namespace Store.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("Store.Data.Models.Category", b =>
+            modelBuilder.Entity("Store.Data.Models.Image", b =>
                 {
-                    b.HasOne("Store.Data.Models.Category", "ParentCategory")
-                        .WithMany("SubCategories")
-                        .HasForeignKey("ParentCategoryId");
+                    b.HasOne("Store.Data.Models.Product", "Product")
+                        .WithMany("Images")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("ParentCategory");
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Store.Data.Models.Product", b =>
@@ -472,10 +450,10 @@ namespace Store.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("Store.Data.Models.ProductSizePrice", b =>
+            modelBuilder.Entity("Store.Data.Models.Variation", b =>
                 {
                     b.HasOne("Store.Data.Models.Product", "Product")
-                        .WithMany("SizePrices")
+                        .WithMany("Variations")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -486,13 +464,15 @@ namespace Store.Migrations
             modelBuilder.Entity("Store.Data.Models.Category", b =>
                 {
                     b.Navigation("Products");
-
-                    b.Navigation("SubCategories");
                 });
 
             modelBuilder.Entity("Store.Data.Models.Product", b =>
                 {
-                    b.Navigation("SizePrices");
+                    b.Navigation("Details");
+
+                    b.Navigation("Images");
+
+                    b.Navigation("Variations");
                 });
 #pragma warning restore 612, 618
         }

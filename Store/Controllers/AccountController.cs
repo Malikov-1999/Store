@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Store.ViewModels;
-using System.Threading.Tasks;
 using Store.Data.Models;
+using Store.ViewModels;
 
 namespace Store.Controllers
 {

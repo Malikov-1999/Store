@@ -1,4 +1,5 @@
-﻿@model Store.ViewModels.LoginViewModel
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model Store.ViewModels.LoginViewModel
 
 <form asp-action="Login" method="post" class="form-container">
     @Html.AntiForgeryToken()

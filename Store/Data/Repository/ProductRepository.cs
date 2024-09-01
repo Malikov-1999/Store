@@ -1,10 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Store.Data.Interfaces;
 using Store.Data.Models;
-using Store.Data.Specifications;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Store.Data.Repository
 {
@@ -17,55 +13,46 @@ namespace Store.Data.Repository
             _context = context;
         }
 
-        public IEnumerable<Product> Products => _context.Products;
-
-        public Product getObjectProduct(int productId)
+        public IEnumerable<Product> GetAllProducts()
         {
-            return _context.Products.FirstOrDefault(p => p.Id == productId);
+            return _context.Products
+                .Include(p => p.Category)
+                .Include(p => p.Variations)
+                .Include(p => p.Details)
+                .Include(p => p.Images)
+                .ToList();
         }
 
-        public async Task<IEnumerable<Product>> GetFilteredProductsAsync(ProductSpecification spec)
+        public Product GetProductById(int productId)
         {
-            var query = _context.Products.AsQueryable();
-
-            if (spec.Filter.CategoryId.HasValue)
-                query = query.Where(p => p.CategoryId == spec.Filter.CategoryId.Value);
-
-            if (spec.Filter.MinPrice.HasValue)
-                query = query.Where(p => p.Price >= spec.Filter.MinPrice.Value);
-
-            if (spec.Filter.MaxPrice.HasValue)
-                query = query.Where(p => p.Price <= spec.Filter.MaxPrice.Value);
-
-            if (!string.IsNullOrEmpty(spec.Filter.CountryOfOrigin))
-                query = query.Where(p => p.CountryOfOrigin == spec.Filter.CountryOfOrigin);
-
-            if (spec.Filter.ProductType.HasValue)
-                query = query.Where(p => p.ProductType == spec.Filter.ProductType.Value);
-
-            if (!string.IsNullOrEmpty(spec.Filter.Surface))
-                query = query.Where(p => p.Surface == spec.Filter.Surface);
-
-            if (!string.IsNullOrEmpty(spec.Filter.Material))
-                query = query.Where(p => p.Material == spec.Filter.Material);
-
-            return await query.ToListAsync();
+            return _context.Products
+                .Include(p => p.Category)
+                .Include(p => p.Variations)
+                .Include(p => p.Details)
+                .Include(p => p.Images)
+                .FirstOrDefault(p => p.Id == productId);
         }
 
-        // Методы для получения списков стран, поверхностей и материалов
-        public IEnumerable<string> GetAllCountries()
+        public void CreateProduct(Product product)
         {
-            return _context.Products.Select(p => p.CountryOfOrigin).Distinct().ToList();
+            _context.Products.Add(product);
+            _context.SaveChanges();
         }
 
-        public IEnumerable<string> GetAllSurfaces()
+        public void UpdateProduct(Product product)
         {
-            return _context.Products.Select(p => p.Surface).Distinct().ToList();
+            _context.Products.Update(product);
+            _context.SaveChanges();
         }
 
-        public IEnumerable<string> GetAllMaterials()
+        public void DeleteProduct(int productId)
         {
-            return _context.Products.Select(p => p.Material).Distinct().ToList();
+            var product = _context.Products.Find(productId);
+            if (product != null)
+            {
+                _context.Products.Remove(product);
+                _context.SaveChanges();
+            }
         }
     }
 }

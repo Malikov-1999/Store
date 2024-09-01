@@ -566,3 +566,24 @@ h1, h2, h3, h4, h5, h6, h8 p, span, div, li {
     border-radius: 50%;
     animation: spin 0.5s linear 0s infinite;
 }
+
+
+
+
+/* Уменьшение шрифта для всех элементов формы */
+#filterForm .form-control,
+#filterForm .form-select,
+#filterForm .btn,
+#filterForm label {
+    font-size: 13px; /* Размер шрифта 14px */
+}
+
+/* Настройка шрифта для кнопок поиска */
+#filterForm .btn-icon i {
+    font-size: 13px; /* Размер шрифта 16px */
+}
+
+/* Настройка шрифта для иконок внутри кнопок */
+#filterForm .btn-custom {
+    font-size: 13px; /* Размер шрифта 14px */
+}

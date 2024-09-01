@@ -1,66 +1,91 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Store.Data.Interfaces;
 using Store.Data.Models;
-using Store.Data.Specifications;
 using Store.ViewModels;
-using System.Threading.Tasks;
 
 namespace Store.Controllers
 {
     public class ProductController : Controller
     {
-        private readonly IAllProducts _allProducts;
-        private readonly IProductCategory _allcategory;
+        private readonly IAllProducts _productRepository;
 
-        public ProductController(IAllProducts iallProducts, IProductCategory iProductcategory)
+        public ProductController(IAllProducts productRepository)
         {
-            _allProducts = iallProducts;
-            _allcategory = iProductcategory;
+            _productRepository = productRepository;
         }
 
-        public ViewResult List(ProductFilter filter)
+        public IActionResult List(int? productId, int? selectedSizeId, string anchor = null)
         {
-            var spec = new ProductSpecification(filter);
-            var products = _allProducts.GetFilteredProductsAsync(spec).Result;
-            
+            var products = _productRepository.GetAllProducts().ToList();
             var model = new ProductListViewModel
             {
-                AllProducts = products,
-                CurrCategory = "Категория",
-                Categories = _allcategory.AllCategories,
-                Countries = _allProducts.GetAllCountries(),
-                ProductTypes = Enum.GetValues(typeof(ProductType)).Cast<ProductType>(),
-                Surfaces = _allProducts.GetAllSurfaces(),
-                Materials = _allProducts.GetAllMaterials(),
+                Products = products
+            };
 
-                SelectedCategoryId = filter.CategoryId,
-                MinPrice = filter.MinPrice,
-                MaxPrice = filter.MaxPrice,
-                CountryOfOrigin = filter.CountryOfOrigin,
-                ProductType = filter.ProductType,
-                Surface = filter.Surface,
-                Material = filter.Material
+            // Инициализируем выбранные вариации
+            foreach (var product in products)
+            {
+                Variation selectedVariation = null;
+
+                // Если есть данные из запроса и они соответствуют текущему продукту
+                if (productId.HasValue && selectedSizeId.HasValue && product.Id == productId.Value)
+                {
+                    selectedVariation = product.Variations.FirstOrDefault(v => v.Id == selectedSizeId.Value);
+                }
+
+                // Если вариация не найдена, выбираем первую по умолчанию
+                if (selectedVariation == null)
+                {
+                    selectedVariation = product.Variations.FirstOrDefault();
+                }
+
+                if (selectedVariation != null)
+                {
+                    model.SelectedVariations[product.Id] = selectedVariation;
+                }
+            }
+
+            // Если передан анкор (ID продукта), добавим его для прокрутки
+            if (!string.IsNullOrEmpty(anchor))
+            {
+                ViewBag.Anchor = anchor;
+            }
+
+            return View(model);
+        }
+
+
+        public IActionResult Details(int id, int? selectedSizeId)
+        {
+            var product = _productRepository.GetProductById(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            Variation selectedVariation = null;
+
+            if (selectedSizeId.HasValue)
+            {
+                selectedVariation = product.Variations.FirstOrDefault(v => v.Id == selectedSizeId.Value);
+            }
+
+            if (selectedVariation == null)
+            {
+                selectedVariation = product.Variations.FirstOrDefault();
+            }
+
+            var model = new ProductListViewModel
+            {
+                SelectedProduct = product,
+                SelectedVariations = new Dictionary<int, Variation> { { product.Id, selectedVariation } }
             };
 
             return View(model);
         }
 
-        public IActionResult Details(int id)
-        {
-            var product = _allProducts.getObjectProduct(id);
-            if (product == null)
-                return NotFound();
 
-            return View(product);
-        }
 
-        [HttpGet]
-        public async Task<IActionResult> GetFilteredProducts([FromQuery] ProductFilter filter)
-        {
-            var spec = new ProductSpecification(filter);
-            var products = await _allProducts.GetFilteredProductsAsync(spec);
 
-            return Ok(products);
-        }
     }
 }

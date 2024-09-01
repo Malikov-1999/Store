@@ -1,6 +1,7 @@
-﻿@model Store.Data.Models.Product
+﻿@model Store.ViewModels.ProductListViewModel
 
 <nav class="pt-3 my-3 my-md-4" aria-label="breadcrumb">
+    <!-- Ваши хлебные крошки -->
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
             <a href="@Url.Action("Index", "Home")" class="text-color">Главная</a>
@@ -8,95 +9,147 @@
         <li class="breadcrumb-item">
             <a href="@Url.Action("List", "Product")" class="text-color">Каталог товаров</a>
         </li>
-        @if (Model.Category != null)
+        @if (Model.SelectedProduct.Category != null)
         {
             <li class="breadcrumb-item">
-                <a href="@Url.Action("Category", "Catalog", new { id = Model.Category.Id })" class="text-color">
-                    @Model.Category.Name
+                <a href="@Url.Action("Category", "Product", new { id = Model.SelectedProduct.Category.Id })" class="text-color">
+                    @Model.SelectedProduct.Category.Name
                 </a>
             </li>
         }
         <li class="breadcrumb-item active text-color" aria-current="page">
-            @Model.Name
+            @Model.SelectedProduct.Name
         </li>
     </ol>
 </nav>
 
-<div class="container mt-4 md-5">
+<div class="container mt-4 md-5 p-2">
     <div class="row">
+        <!-- Блок с изображениями -->
         <div id="product-image" class="col-md-6">
-            <img src="@Model.ImageUrl" class="img-fluid" alt="@Model.Name" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#productImageModal" onclick="openModal('@Model.ImageUrl')">
-            <div id="product-description" class="mt-3">
-                <p>@Model.Description</p>
-            </div>
-        </div>
-
-        <div id="product-details" class="col-md-5">
-            <h5>@Model.Name</h5>
-            <p><h8>Артикул:</h8> @Model.SKU</p>
-
-            @if (Model.DiscountPrice.HasValue)
+            <!-- Карусель изображений продукта на странице Details -->
+            @if (Model.SelectedProduct.Images != null && Model.SelectedProduct.Images.Any())
             {
-                <p>
-                    <span><h8>Цена:</h8></span>
-                    <span style="text-decoration: line-through;">@Model.Price.ToString("C")</span>
-                    <span class="text-success">@Model.DiscountPrice.Value.ToString("C")</span>
-                </p>
+                <div id="carouselDetailsImages" class="carousel slide details-images" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        @{
+                            int imageIndex = 0;
+                            foreach (var image in Model.SelectedProduct.Images)
+                            {
+                                var isActive = imageIndex == 0 ? "active" : "";
+                                <div class="carousel-item @isActive">
+                                    <img src="@image.Url" class="d-block w-100 img-fluid" alt="@Model.SelectedProduct.Name" style="cursor: pointer;" onclick="openModal('@image.Url')">
+                                </div>
+                                imageIndex++;
+                            }
+                        }
+                    </div>
+
+                    <!-- Стрелки навигации для карусели -->
+                    @if (Model.SelectedProduct.Images.Count() > 1)
+                    {
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselDetailsImages" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Предыдущий</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselDetailsImages" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Следующий</span>
+                        </button>
+                    }
+                </div>
             }
             else
             {
-                <p><h8>Цена:</h8> @Model.Price.ToString("C")</p>
+                <img src="/images/placeholder.png" class="img-fluid" alt="Изображение не найдено">
             }
+        </div>
 
-            <p><h8>Доступен:</h8> @(Model.Available ? "Да" : "Нет")</p>
-            <p><h8>Производитель:</h8> @Model.CountryOfOrigin</p>
-
-            @if (Model.AvailableSizes != null && Model.AvailableSizes.Any())
-            {
-                <p><h8>Доступные размеры:</h8></p>
-                <select class="form-select mb-3">
-                    @foreach (var size in Model.AvailableSizes)
-                    {
-                        <option value="@size">@size</option>
-                    }
-                </select>
-            }
-
-            <!-- Таблица с характеристиками -->
-            <table class="table mt-2">
+        <!-- Блок с характеристиками -->
+        <div id="product-details" class="col-md-6">
+            <h1>@Model.SelectedProduct.Name</h1>
+            <p><strong>Артикул:</strong> @Model.SelectedProduct.SKU</p>
+            <p><strong>Описание:</strong> @Model.SelectedProduct.Description</p>
+            <h4>Характеристики:</h4>
+            <!-- Отображение основных характеристик -->
+            <table class="table mt-3">
                 <tbody>
                     <tr>
-                        <td><h8>Категория:</h8></td>
-                        <td>@Model.Category?.Name</td>
+                        <td><strong>Категория:</strong></td>
+                        <td>@Model.SelectedProduct.Category?.Name</td>
                     </tr>
                     <tr>
-                        <td><h8>Поверхность:</h8></td>
-                        <td>@Model.Surface</td>
+                        <td><strong>Тип продукта:</strong></td>
+                        <td>@Model.SelectedProduct.ProductTypeTypes.ToString()</td>
                     </tr>
                     <tr>
-                        <td><h8>Группа:</h8></td>
-                        <td>@Model.Group</td>
+                        <td><strong>Группа, вид:</strong></td>
+                        <td>@Model.SelectedProduct.Group</td>
                     </tr>
                     <tr>
-                        <td><h8>Материал:</h8></td>
-                        <td>@Model.Material</td>
+                        <td><strong>Материал:</strong></td>
+                        <td>@Model.SelectedProduct.Material</td>
                     </tr>
                     <tr>
-                        <td><h8>Тип продукта:</h8></td>
-                        <td>@Model.ProductType.ToString()</td>
+                        <td><strong>Страна производства:</strong></td>
+                        <td>@Model.SelectedProduct.Country</td>
                     </tr>
                 </tbody>
             </table>
 
-            <!-- Кнопка "Добавить в корзину" -->
-            <button class="btn btn-custom mb-4">Добавить в корзину</button>
+            <!-- Форма для выбора размера -->
+            @if (Model.SelectedProduct.Variations != null && Model.SelectedProduct.Variations.Any())
+            {
+                <h3>Выберите размер:</h3>
+                @using (Html.BeginForm("Details", "Product", FormMethod.Get, new { @id = "sizeForm" }))
+                {
+                    <input type="hidden" name="id" value="@Model.SelectedProduct.Id" />
+                    <div class="form-group">
+                        <select name="selectedSizeId" class="form-select" onchange="document.getElementById('sizeForm').submit();">
+                            @foreach (var variation in Model.SelectedProduct.Variations)
+                            {
+                                var isSelected = Model.SelectedVariations[Model.SelectedProduct.Id]?.Id == variation.Id;
+                                <option value="@variation.Id" @(isSelected ? "selected" : "")>
+                                    @variation.Size
+                                </option>
+                            }
+                        </select>
+                    </div>
+                }
 
-            <!-- Кнопка "Оформить сейчас" -->
-            <button class="btn btn-custom mb-4">Оформить сейчас</button>
+                <!-- Отображение цены -->
+                @if (Model.SelectedVariations.ContainsKey(Model.SelectedProduct.Id))
+                {
+                    var selectedVariation = Model.SelectedVariations[Model.SelectedProduct.Id];
+
+                    <p>
+                        <strong>Цена:</strong>
+                        @if (selectedVariation.DiscountedPrice.HasValue)
+                        {
+                            <strong style="text-decoration: line-through;">@selectedVariation.Price.ToString("N2") ₽</strong>
+                            <strong class="text-success">@selectedVariation.DiscountedPrice.Value.ToString("N2") ₽</strong>
+                        }
+                        else
+                        {
+                            <strong>@selectedVariation.Price.ToString("N2") ₽</strong>
+                        }
+                    </p>
+                }
+            }
+            else
+            {
+                <p class="text-danger">Размеры для этого продукта не указаны.</p>
+            }
+
+            <!-- Кнопки действий -->
+            <div class="mt-4">
+                <a href="#" class="btn btn-custom">В корзину</a>
+                <a href="#" class="btn btn-custom">Оформить сейчас</a>
+                <a href="@Url.Action("List", "Product")" class="btn btn-custom">Назад к каталогу</a>
+            </div>
         </div>
     </div>
 </div>
-
 
 <!-- Модальное окно для увеличенного изображения -->
 <div class="modal fade" id="productImageModal" tabindex="-1" aria-labelledby="productImageModalLabel" aria-hidden="true">
@@ -112,5 +165,9 @@
 <script>
     function openModal(imageUrl) {
         document.getElementById('modalImage').src = imageUrl;
+        var modal = new bootstrap.Modal(document.getElementById('productImageModal'), {
+            keyboard: true
+        });
+        modal.show();
     }
 </script>

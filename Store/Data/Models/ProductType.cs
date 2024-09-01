@@ -1,5 +1,9 @@
-﻿public enum ProductType
+﻿namespace Store.Data.Models
 {
-    MainProduct,
-    Accessory
+    public enum ProductType
+    {
+        Основной,
+        Комплектующие,
+        // Добавьте другие типы, если необходимо
+    }
 }

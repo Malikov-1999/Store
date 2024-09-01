@@ -1,12 +1,11 @@
-using Store.Data.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using Store.Data;
-using Store.Data.Repository;
 using Microsoft.AspNetCore.Identity;
-using Store.Data.Models;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
-using Serilog.Sinks.File;
-using Serilog.Extensions.Logging;
+using Store.Data;
+using Store.Data.Interfaces;
+using Store.Data.Models;
+using Store.Data.Repository;
+using Store.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +17,9 @@ var logger = new LoggerConfiguration()
 builder.Logging.ClearProviders();
 builder.Logging.AddSerilog(logger);
 
+
+builder.Services.AddControllersWithViews();
+
 // Получение строки подключения из appsettings.json
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -25,11 +27,25 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AppDBContent>(options =>
     options.UseSqlServer(connectionString));
 
+
+// Настройка сервисов
+builder.Services.AddDbContext<AppDBContent>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<IAllProducts, ProductRepository>();
+builder.Services.AddScoped<IProductCategory, CategoryRepository>();
+
+
 // Регистрация Identity с использованием кастомной модели пользователя ApplicationUser
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<AppDBContent>()
     .AddDefaultTokenProviders();
 
+builder.Services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, CustomClaimsPrincipalFactory>();
+
+<<<<<<< HEAD
+
+=======
+>>>>>>> РїРµСЂРµРґРµР»Р°РЅ С„РёР»СЊС‚СЂС‹
 // Настройка требований к паролю
 builder.Services.Configure<IdentityOptions>(options =>
 {
@@ -67,24 +83,12 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Инициализация базы данных и применение миграций
+// Вызов метода инициализации данных
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    try
-    {
-        var context = services.GetRequiredService<AppDBContent>();
-
-        // Применение всех миграций
-        context.Database.Migrate();
-
-        // Инициализация базы данных
-        DBObjects.Initial(context);
-    }
-    catch (Exception ex)
-    {
-        services.GetRequiredService<ILogger<Program>>().LogError(ex, "Произошла ошибка при инициализации базы данных.");
-    }
+    var context = services.GetRequiredService<AppDBContent>();
+    DBObjects.Initial(context);
 }
 
 // Маршрутизация
