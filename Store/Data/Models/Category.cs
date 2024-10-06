@@ -8,7 +8,7 @@
 
         public Category()
         {
-            Products = new List<Product>();
+            Products = [];
         }
     }
 }

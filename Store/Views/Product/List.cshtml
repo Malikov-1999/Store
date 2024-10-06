@@ -1,4 +1,5 @@
-﻿@using Store.Data.Models
+﻿@using Azure.Core
+@using Store.Data.Models
 @model Store.ViewModels.ProductListViewModel
 
 <nav class="pt-3 my-3 my-md-3 justify-content-center" aria-label="breadcrumb">
@@ -15,9 +16,9 @@
 <!-- Форма поиска -->
 <div class="row mb-3">
     <div class="col-md-4 col-sm-6 mb-2">
-        <form method="get" action="@Url.Action("Index", "Product")">
+        <form method="get" action="@Url.Action("List", "Product")" id="searchForm">
             <div class="position-relative">
-                <input type="search" name="SearchTerm" class="rounded-pill form-control bg-custom text-custom" placeholder="Поиск..." style="padding-right: 40px; height: calc(1.5em + 1rem + 2px);">
+                <input type="search" name="SearchTerm" id="searchInput" class="rounded-pill form-control bg-custom text-custom" placeholder="Поиск..." value="@Model.SearchTerm" style="padding-right: 40px; height: calc(1.5em + 1rem + 2px);">
                 <button type="submit" class="btn btn-icon btn-sm fs-lg rounded-circle position-absolute top-0 end-0 mt-1 me-1 bg-custom text-custom" aria-label="Поиск">
                     <i class="ci-arrow-right text-custom"></i>
                 </button>
@@ -26,83 +27,156 @@
     </div>
 </div>
 
+<script>
+    document.getElementById('searchForm').addEventListener('submit', function (event) {
+        const searchInput = document.getElementById('searchInput');
+        const searchTerm = searchInput.value.trim(); // Удаляем пробелы с начала и конца
+
+        // Если строка поиска пуста, возвращаемся к исходным данным
+        if (searchTerm === '') {
+            event.preventDefault(); // Останавливаем отправку формы
+
+            // Перенаправляем пользователя на исходный URL (без параметров)
+            window.location.href = '@Url.Action("List", "Product")';
+        }
+    });
+</script>
 
 
 
-<form method="get" action="@Url.Action("List", "Product")">
-    <div class="row mb-4">
-        <!-- Фильтр по категориям -->
-        <div class="col-md-3">
-            <label for="categoryFilter">Категория:</label>
-            <select name="categoryId" id="categoryFilter" class="form-select">
-                <option value="">Все категории</option>
-                @foreach (var category in Model.Categories)
-                {
-                    <option value="@category.Id" @(Model.SelectedCategoryId == category.Id ? "selected" : "")>
-                        @category.Name
-                    </option>
-                }
-            </select>
+<!-- Кнопка для открытия формы фильтрации и сброса фильтров -->
+<div class="d-flex mb-3">
+    <!-- Кнопка для открытия формы фильтрации -->
+    <button type="button" class="btn btn-custom" onclick="toggleFilterForm()">
+        <i class="fas fa-filter"></i> Фильтры
+    </button>
+
+    <!-- Кнопка для сброса фильтров -->
+    <button type="button" class="btn btn-custom ms-2" onclick="resetFilters()">Сбросить фильтры</button>
+</div>
+
+<!-- Форма фильтрации (скрыта по умолчанию) -->
+<div id="filterForm" style="display: none;">
+    <form method="get" action="@Url.Action("List", "Product")">
+        <div class="row g-3 mb-4" style="font-size: 14px;">
+            <!-- Отступы и шрифт -->
+            <!-- Фильтр по категориям -->
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                <label for="categoryFilter">Категория:</label>
+                <select name="categoryId" id="categoryFilter" class="form-select rounded-pill w-100">
+                    <option value="">Все категории</option>
+                    @foreach (var category in Model.Categories)
+                    {
+                        <option value="@category.Id" @(Context.Request.Query["categoryId"] == category.Id.ToString() ? "selected" : "")>
+                            @category.Name
+                        </option>
+                    }
+                </select>
+            </div>
+
+            <!-- Фильтр по типу продукта -->
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                <label for="productTypeFilter">Тип продукта:</label>
+                <select name="productType" id="productTypeFilter" class="form-select rounded-pill w-100">
+                    <option value="">Все типы</option>
+                    @foreach (var type in Enum.GetValues(typeof(ProductType)))
+                    {
+                        <option value="@type" @(Context.Request.Query["productType"] == type.ToString() ? "selected" : "")>
+                            @type
+                        </option>
+                    }
+                </select>
+            </div>
+
+            <!-- Фильтр по материалу -->
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                <label for="materialFilter">Материал:</label>
+                <select name="material" id="materialFilter" class="form-select rounded-pill w-100">
+                    <option value="">Все материалы</option>
+                    @foreach (var material in Model.Materials)
+                    {
+                        <option value="@material" @(Context.Request.Query["material"] == material ? "selected" : "")>
+                            @material
+                        </option>
+                    }
+                </select>
+            </div>
+
+            <!-- Фильтр по стране -->
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                <label for="countryFilter">Страна:</label>
+                <select name="country" id="countryFilter" class="form-select rounded-pill w-100">
+                    <option value="">Все страны</option>
+                    @foreach (var country in Model.Countries)
+                    {
+                        <option value="@country" @(Context.Request.Query["country"] == country ? "selected" : "")>
+                            @country
+                        </option>
+                    }
+                </select>
+            </div>
+
+            <!-- Сортировка по цене -->
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                <label for="sortOrder">Сортировка по цене:</label>
+                <select name="sortOrder" id="sortOrder" class="form-select rounded-pill w-100">
+                    <option value="">Без сортировки</option>
+                    <option value="price_asc" @(Context.Request.Query["sortOrder"] == "price_asc" ? "selected" : "")>По возрастанию</option>
+                    <option value="price_desc" @(Context.Request.Query["sortOrder"] == "price_desc" ? "selected" : "")>По убыванию</option>
+                </select>
+            </div>
+
+            <!-- Фильтр по цене -->
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                <label for="priceMin">Цена от:</label>
+                <input type="number" name="priceMin" id="priceMin" class="form-control rounded-pill" value="@Context.Request.Query["priceMin"]" placeholder="от" min="0" />
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                <label for="priceMax">Цена до:</label>
+                <input type="number" name="priceMax" id="priceMax" class="form-control rounded-pill" value="@Context.Request.Query["priceMax"]" placeholder="до" min="0" />
+            </div>
+
+            <!-- Кнопка для применения фильтров -->
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3 align-self-end">
+                <!-- Добавлен класс align-self-end для выравнивания -->
+                <button type="submit" class="btn btn-custom rounded-pill">Применить фильтры</button>
+            </div>
         </div>
+    </form>
+</div>
 
-        <!-- Фильтр по типу продукта -->
-        <div class="col-md-3">
-            <label for="productTypeFilter">Тип продукта:</label>
-            <select name="productType" id="productTypeFilter" class="form-select">
-                <option value="">Все типы</option>
-                @foreach (var type in Enum.GetValues(typeof(ProductType)))
-                {
-                    <option value="@type" @(Model.SelectedProductType == type.ToString() ? "selected" : "")>
-                        @type
-                    </option>
-                }
-            </select>
-        </div>
+<!-- Скрипты для работы с фильтрами -->
+<script>
+    // Функция для отображения/скрытия формы фильтрации
+    function toggleFilterForm() {
+        var form = document.getElementById("filterForm");
+        if (form.style.display === "none") {
+            form.style.display = "block";
+        } else {
+            form.style.display = "none";
+        }
+    }
 
-        <!-- Фильтр по материалу -->
-        <div class="col-md-3">
-            <label for="materialFilter">Материал:</label>
-            <select name="material" id="materialFilter" class="form-select">
-                <option value="">Все материалы</option>
-                @foreach (var material in Model.Materials)
-                {
-                    <option value="@material" @(Model.SelectedMaterial == material ? "selected" : "")>
-                        @material
-                    </option>
-                }
-            </select>
-        </div>
+    // Функция для сброса фильтров
+    function resetFilters() {
+        // Очистка параметров запроса
+        const url = new URL(window.location.href);
+        url.searchParams.delete('categoryId');
+        url.searchParams.delete('productType');
+        url.searchParams.delete('material');
+        url.searchParams.delete('country');
+        url.searchParams.delete('priceMin');
+        url.searchParams.delete('priceMax');
+        url.searchParams.delete('sortOrder');
 
-        <!-- Фильтр по стране -->
-        <div class="col-md-3">
-            <label for="countryFilter">Страна:</label>
-            <select name="country" id="countryFilter" class="form-select">
-                <option value="">Все страны</option>
-                @foreach (var country in Model.Countries)
-                {
-                    <option value="@country" @(Model.SelectedCountry == country ? "selected" : "")>
-                        @country
-                    </option>
-                }
-            </select>
-        </div>
+        // Перезагрузка страницы без фильтров
+        window.location.href = url.href;
+    }
+</script>
 
-        <!-- Фильтр по цене -->
-        <div class="col-md-3">
-            <label for="priceMin">Цена от:</label>
-            <input type="number" name="priceMin" id="priceMin" class="form-control" value="@Model.PriceMin" placeholder="Минимальная цена" />
-        </div>
 
-        <div class="col-md-3">
-            <label for="priceMax">Цена до:</label>
-            <input type="number" name="priceMax" id="priceMax" class="form-control" value="@Model.PriceMax" placeholder="Максимальная цена" />
-        </div>
 
-        <div class="col-md-3 mt-3">
-            <button type="submit" class="btn btn-custom">Применить фильтры</button>
-        </div>
-    </div>
-</form>
 
 
 
@@ -113,103 +187,79 @@
         {
             <div class="col-md-4 mb-4">
                 <div class="card h-100 productCard">
-                    <!-- Карусель изображений продукта -->
-                    @if (product.Images != null && product.Images.Any())
-                    {
-                        <div id="carousel-@product.Id" class="carousel slide" data-bs-ride="carousel">
-                            <div class="carousel-inner product-images">
-                                @{
-                                    int imageIndex = 0;
-                                    foreach (var image in product.Images)
-                                    {
-                                        var isActive = imageIndex == 0 ? "active" : "";
-                                        <div class="carousel-item @isActive">
-                                            <!-- Оборачиваем изображение в ссылку на страницу Details -->
-                                            <a href="@Url.Action("Details", "Product", new { id = product.Id })">
-                                                <img src="@image.Url" alt="@product.Name" />
-                                            </a>
-                                        </div>
-                                        imageIndex++;
-                                    }
-                                }
-                            </div>
+                    <!-- Показываем только первое изображение товара -->
+                    <a href="@Url.Action("Details", "Product", new { id = product.Id })">
+                        @if (product.Images != null && product.Images.Any())
+                        {
+                            <img src="@product.Images.First().Url" alt="@product.Name" class="card-img-top img-fluid product-image" />
+                        }
+                        else
+                        {
+                            <img src="/images/placeholder.png" class="card-img-top img-fluid product-image" alt="Изображение не найдено">
+                        }
+                    </a>
 
-                            <!-- Стрелки навигации -->
-                            @if (product.Images.Count() > 1)
-                            {
-                                <button class="carousel-control-prev" type="button" data-bs-target="#carousel-@product.Id" data-bs-slide="prev">
-                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Предыдущий</span>
-                                </button>
-                                <button class="carousel-control-next" type="button" data-bs-target="#carousel-@product.Id" data-bs-slide="next">
-                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Следующий</span>
-                                </button>
-                            }
-                        </div>
-                    }
-                    else
-                    {
-                        <a href="@Url.Action("Details", "Product", new { id = product.Id })">
-                            <img src="/images/placeholder.png" class="card-img-top imgCard product-images" alt="Изображение не найдено">
-                        </a>
-                    }
                     <div class="card-body">
                         <h5 class="card-title">@product.Name</h5>
 
                         <!-- Форма для выбора размера -->
-                        @using (Html.BeginForm("List", "Product", FormMethod.Get, new { @id = "sizeForm-" + product.Id }))
-                        {
-                            <input type="hidden" name="productId" value="@product.Id" />
-                            <div class="form-group">
-                                <label for="size-selector-@product.Id">Выберите размер:</label>
-                                <select id="size-selector-@product.Id" name="selectedSizeId" class="form-select" onchange="document.getElementById('sizeForm-@product.Id').submit();">
-                                    @foreach (var variation in product.Variations)
-                                    {
-                                        var isSelected = Model.SelectedVariations.ContainsKey(product.Id) && Model.SelectedVariations[product.Id].Id == variation.Id;
-                                        <option value="@variation.Id" @(isSelected ? "selected" : "")>
-                                            @variation.Size
-                                        </option>
-                                    }
-                                </select>
-                            </div>
-                        }
+                        <div class="form-group">
+                            <label for="size-selector-@product.Id">Выберите размер:</label>
+                            <select id="size-selector-@product.Id" name="selectedSizeId" class="form-select" onchange="updatePrice(@product.Id, this.value);">
+                                @foreach (var variation in product.Variations)
+                                {
+                                    var isSelected = Model.SelectedVariations.ContainsKey(product.Id) && Model.SelectedVariations[product.Id].Id == variation.Id;
+                                    <option value="@variation.Id" @(isSelected ? "selected" : "")>
+                                        @variation.Size
+                                    </option>
+                                }
+                            </select>
+                        </div>
 
                         <!-- Отображение цены -->
-                        @{
-                            Variation selectedVariation;
-                            if (Model.SelectedVariations.ContainsKey(product.Id))
-                            {
-                                selectedVariation = Model.SelectedVariations[product.Id];
-                            }
-                            else
-                            {
-                                selectedVariation = product.Variations.First();
-                            }
-                        }
-
-                        <p class="card-text">
+                        <p class="card-text price-display" id="price-display-@product.Id">
                             <strong>Цена: </strong>
-                            @if (selectedVariation.DiscountedPrice.HasValue)
-                            {
-                                <strong style="text-decoration: line-through;">
-                                    @selectedVariation.Price.ToString("N2") ₽
-                                </strong>
-                                <strong class="text-success">
-                                    @selectedVariation.DiscountedPrice.Value.ToString("N2") ₽
-                                </strong>
-                            }
-                            else
-                            {
-                                <strong>@selectedVariation.Price.ToString("N2") ₽</strong>
+                            @{
+                                Variation selectedVariation;
+                                if (Model.SelectedVariations.ContainsKey(product.Id))
+                                {
+                                    selectedVariation = Model.SelectedVariations[product.Id];
+                                }
+                                else
+                                {
+                                    selectedVariation = product.Variations.First();
+                                }
+
+                                if (selectedVariation.DiscountedPrice.HasValue)
+                                {
+                                    <strong style="text-decoration: line-through;">
+                                        @selectedVariation.Price.ToString("N2") ₽
+                                    </strong>
+                                    <strong class="text-success">
+                                        @selectedVariation.DiscountedPrice.Value.ToString("N2") ₽
+                                    </strong>
+                                }
+                                else
+                                {
+                                    <strong>@selectedVariation.Price.ToString("N2") ₽</strong>
+                                }
                             }
                         </p>
 
-                        <!-- Кнопки действий -->
-                        <a href="#" class="btn btn-custom">В корзину</a>
-                        <a href="#" class="btn btn-custom">Оформить сейчас</a>
-                        <a href="@Url.Action("Details", "Product", new { id = product.Id })" class="btn btn-custom">Подробнее</a>
+                        <!-- Кнопка "Добавить в корзину" -->
+                        <form method="post" action="@Url.Action("AddToCart", "Cart")">
+                            <input type="hidden" name="productId" value="@product.Id" />
+                            <input type="hidden" name="size" value="@Model.SelectedSize" /> <!-- Например, размер выбран из вариации -->
+                            <input type="hidden" name="quantity" value="1" /> <!-- По умолчанию добавляем 1 единицу товара -->
 
+                            <button type="submit" class="btn btn-custom">В корзину</button>
+                        </form>
+
+                        <!-- Кнопка "Оформить сейчас" -->
+                        <a href="@Url.Action("Checkout", "Order")" class="btn btn-custom">Оформить сейчас</a>
+
+                        <!-- Кнопка "Подробнее" -->
+                        <a href="@Url.Action("Details", "Product", new { id = product.Id })" class="btn btn-custom">Подробнее</a>
                     </div>
                 </div>
             </div>
@@ -220,3 +270,39 @@
         <p>Нет доступных продуктов.</p>
     }
 </div>
+
+<style>
+    .product-image {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+    }
+</style>
+
+<script>
+    function updatePrice(productId, selectedSizeId) {
+        console.log("Updating price for product: ", productId, " and size: ", selectedSizeId); // Отладочный вывод
+
+        $.ajax({
+            url: '@Url.Action("GetPrice", "Product")',
+            type: 'GET',
+            data: { productId: productId, sizeId: selectedSizeId },
+            success: function (data) {
+                console.log("AJAX Response:", data); // Отладочный вывод ответа
+                let priceDisplay = $('#price-display-' + productId);
+                priceDisplay.empty();
+                priceDisplay.append(<strong>Цена: </strong>);
+
+                if (data.discountedPrice) {
+                    priceDisplay.append(<strong style="text-decoration: line-through;">${data.originalPrice} ₽</strong>);
+                    priceDisplay.append(<strong class="text-success">${data.discountedPrice} ₽</strong>);
+                } else {
+                    priceDisplay.append(<strong>${data.originalPrice} ₽</strong>);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX error:", status, error); // Выводим ошибку в консоль
+            }
+        });
+    }
+</script>

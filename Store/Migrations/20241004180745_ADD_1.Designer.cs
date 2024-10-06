@@ -12,8 +12,8 @@ using Store.Data;
 namespace Store.Migrations
 {
     [DbContext(typeof(AppDBContent))]
-    [Migration("20240924112144_MakeGroupNullable")]
-    partial class MakeGroupNullable
+    [Migration("20241004180745_ADD_1")]
+    partial class ADD_1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

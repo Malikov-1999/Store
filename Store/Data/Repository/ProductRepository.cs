@@ -54,5 +54,28 @@ namespace Store.Data.Repository
                 _context.SaveChanges();
             }
         }
+
+
+        // Реализация метода поиска
+        public IEnumerable<Product> SearchProducts(string searchTerm)
+        {
+            if (string.IsNullOrEmpty(searchTerm))
+            {
+                return _context.Products
+                    .Include(p => p.Category)
+                    .Include(p => p.Variations)
+                    .Include(p => p.Details)
+                    .Include(p => p.Images)
+                    .ToList();
+            }
+            return _context.Products
+                .Include(p => p.Category)
+                .Include(p => p.Variations)
+                .Include(p => p.Details)
+                .Include(p => p.Images)
+                .Where(p => p.Name.Contains(searchTerm) || p.Description.Contains(searchTerm))
+                .ToList();
+        }
+
     }
 }

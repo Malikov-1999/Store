@@ -9,5 +9,7 @@ namespace Store.Data.Interfaces
         void CreateProduct(Product product);
         void UpdateProduct(Product product);
         void DeleteProduct(int productId);
+        // Новый метод для поиска
+        IEnumerable<Product> SearchProducts(string searchTerm);
     }
 }

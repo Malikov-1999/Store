@@ -14,9 +14,18 @@ var logger = new LoggerConfiguration()
     .WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day)
     .CreateLogger();
 
+// Добавляем поддержку сессий
+builder.Services.AddDistributedMemoryCache(); // Включение кэширования в памяти для сессий
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Время жизни сессии
+    options.Cookie.HttpOnly = true; // Безопасность для сессий (только HTTP)
+    options.Cookie.IsEssential = true; // Сессии необходимы для функционирования сайта
+});
+
+
 builder.Logging.ClearProviders();
 builder.Logging.AddSerilog(logger);
-
 
 builder.Services.AddControllersWithViews();
 
@@ -27,26 +36,19 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AppDBContent>(options =>
     options.UseSqlServer(connectionString));
 
-
-// Настройка сервисов
-builder.Services.AddDbContext<AppDBContent>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+// Регистрация репозиториев и других сервисов
 builder.Services.AddScoped<IAllProducts, ProductRepository>();
 builder.Services.AddScoped<IProductCategory, CategoryRepository>();
-
 
 // Регистрация Identity с использованием кастомной модели пользователя ApplicationUser
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<AppDBContent>()
     .AddDefaultTokenProviders();
 
+// Кастомная фабрика для добавления claim'ов
 builder.Services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, CustomClaimsPrincipalFactory>();
 
-<<<<<<< HEAD
-
-=======
->>>>>>> РїРµСЂРµРґРµР»Р°РЅ С„РёР»СЊС‚СЂС‹
-// Настройка требований к паролю
+// Настройка параметров Identity
 builder.Services.Configure<IdentityOptions>(options =>
 {
     options.Password.RequireDigit = true; // Требование наличия цифры
@@ -57,10 +59,19 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequiredUniqueChars = 2; // Количество уникальных символов
 });
 
+// Настройка сессий
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
 // Регистрация сервисов в DI контейнере
 builder.Services.AddControllersWithViews();
-builder.Services.AddTransient<IAllProducts, ProductRepository>();
-builder.Services.AddTransient<IProductCategory, CategoryRepository>();
 
 var app = builder.Build();
 
@@ -79,9 +90,15 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
+// Подключение сессий
+app.UseSession();
+
 // Аутентификация и авторизация
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Подключение middleware для работы с сессиями
+app.UseSession();
 
 // Вызов метода инициализации данных
 using (var scope = app.Services.CreateScope())
