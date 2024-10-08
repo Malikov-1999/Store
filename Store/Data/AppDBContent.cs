@@ -16,10 +16,6 @@ namespace Store.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<Image> Images { get; set; }
 
-
-
-
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -47,10 +43,6 @@ namespace Store.Data
                 .HasOne(i => i.Product)
                 .WithMany(p => p.Images)
                 .HasForeignKey(i => i.ProductId);
-
-
-
-
 
         }
 

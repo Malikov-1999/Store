@@ -138,7 +138,6 @@ namespace Store.Data
                     ProductTypeTypes = ProductType.Комплектующие,
                     Material = "ПВХ",
                     Country = "Польша",
-                    Group = "Овальный",
                     Variations =
                     [
                         new Variation { Size = "37 мм", Price = 200.00M }
@@ -147,7 +146,8 @@ namespace Store.Data
                     [
                         new Detail { Key = "Единица измерения", Value = "комплект" },
                         new Detail { Key = "Масса 1 ед. (кг)", Value = "0.02" },
-                        new Detail { Key = "Объем 1 ед. (м³)", Value = "0.00026752" }
+                        new Detail { Key = "Объем 1 ед. (м³)", Value = "0.00026752" },
+                        new Detail { Key = "Вид", Value = "Овальный" }
                     ],
                     Images =
                     [

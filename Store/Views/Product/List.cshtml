@@ -290,15 +290,18 @@
             success: function (data) {
                 console.log("AJAX Response:", data); // Отладочный вывод ответа
                 let priceDisplay = $('#price-display-' + productId);
-                priceDisplay.empty();
-                priceDisplay.append(<strong>Цена: </strong>);
+                priceDisplay.empty();  // очищаем старую цену
+
+                let priceHtml = "<strong>Цена: </strong>";
 
                 if (data.discountedPrice) {
-                    priceDisplay.append(<strong style="text-decoration: line-through;">${data.originalPrice} ₽</strong>);
-                    priceDisplay.append(<strong class="text-success">${data.discountedPrice} ₽</strong>);
+                    priceHtml += `<strong style="text-decoration: line-through;">${data.originalPrice} ₽</strong>`;
+                    priceHtml += `<strong class="text-success">${data.discountedPrice} ₽</strong>`;
                 } else {
-                    priceDisplay.append(<strong>${data.originalPrice} ₽</strong>);
+                    priceHtml += `<strong>${data.originalPrice} ₽</strong>`;
                 }
+
+                priceDisplay.append(priceHtml);
             },
             error: function (xhr, status, error) {
                 console.error("AJAX error:", status, error); // Выводим ошибку в консоль
